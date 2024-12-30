@@ -18,6 +18,7 @@ def run(puzzle, secondflag):
 
 def runall():
     answers = [(2815556, 23927637), (282, 349), (166630675, 93465710), (2639, 2005), (5747, 5502)]
+    # (12553187650171, 96779702119491)
     for day, (first, second) in enumerate(answers):
         start = time.perf_counter_ns()
         one = fullrun(day+1, False)
