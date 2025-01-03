@@ -103,5 +103,4 @@ def main(second_flag):
         garden = Parse(f)
     if not second_flag:
         return garden.price()
-    # 852368 too low!
     return garden.discount_price()
