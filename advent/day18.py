@@ -1,4 +1,3 @@
-import stat
 import advent.utils.graphs as graphs
 
 class Parse:
