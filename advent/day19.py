@@ -44,7 +44,6 @@ class Parse:
 def main(second_flag):
     with open("input19.txt") as f:
         towels = Parse(f)
-    lens = [len(t) for t in towels.towels]
     if not second_flag:
         return towels.number_designs_possible2()
     return sum(towels.count_ways2(d) for d in towels.designs)
