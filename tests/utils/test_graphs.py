@@ -1,3 +1,4 @@
+from flask import cli
 import pytest
 
 import advent.utils.graphs as util
@@ -55,3 +56,18 @@ def test_shortest_paths_all(wiki_eg):
     d, p = util.shortest_paths_all(wiki_eg, 1)
     assert d == {1:0, 2:7, 3:9, 4:20, 5:20, 6:11}
     assert p == {1:None, 2:{1}, 3:{1}, 4:{3}, 5:{6}, 6:{3}}
+
+def test_BronKerbosch():
+    g = util.Graph()
+    for v in range(1, 7):
+        g.add_vertex(v)
+    def uedge(u, v):
+        g.add_directed_edge(u, v)
+        g.add_directed_edge(v, u)
+    for e in [(1,2), (1,5), (2,3), (2,5), (3,4), (4,5), (4,6)]:
+        uedge(*e)
+
+    cliques = list(util.BronKerbosch(g))
+    assert [x for x in cliques if len(x) == 3] == [{1,2,5}]
+    assert len([x for x in cliques if len(x)==2]) == 4
+    assert [x for x in cliques if len(x) > 3 or len(x) < 2] == []

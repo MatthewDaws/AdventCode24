@@ -117,3 +117,18 @@ def shortest_paths_all(graph, start):
                 if u not in visited:
                     unvisited.add(u)
     return shortest_distances, predecessors
+
+def BronKerbosch(graph):
+    """Yields all maximal cliques in graph (which is assumed undirected)"""
+    tasks = [ (set(), set(graph.vertices), set()) ]
+    while len(tasks) > 0:
+        clique, options, ignore = tasks.pop()
+        if len(options) == 0:
+            if len(ignore) == 0:
+                yield clique
+            continue
+        while len(options) > 0:
+            v = options.pop()
+            ns = set(graph.neighbours_of(v))
+            tasks.append((clique | {v}, options & ns, ignore & ns))
+            ignore.add(v)
