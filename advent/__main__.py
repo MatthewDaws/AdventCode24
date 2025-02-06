@@ -22,7 +22,8 @@ def runall():
                (185894, 221632504974231), (1451030 ,859494), (33427, 91649162972270), (208437768, 7492),
                (1514333, 1528453), (88416, 442), (("4,1,7,6,4,1,0,2,7",None), 164279024971453), (326, ((18,62),None)),
                (360, 577474410989846), (1393, 990096), (184180, 231309103124520), (13022553808, 1555),
-               (1154, ("aj,ds,gg,id,im,jx,kq,nj,ql,qr,ua,yh,zn", None))]
+               (1154, ("aj,ds,gg,id,im,jx,kq,nj,ql,qr,ua,yh,zn", None)),
+               (57270694330992, ("gwh,jct,rcb,wbw,wgb,z09,z21,z39", None))]
     for day, (first, second) in enumerate(answers):
         start = time.perf_counter_ns()
         one = fullrun(day+1, False)
