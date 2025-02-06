@@ -67,12 +67,15 @@ class Parse:
             count += 1
         return count
     
-    def find_path_until_leave(self):
-        places = set()
-        places.add(self.location)
+    def find_path_and_dirs_until_leave(self):
+        places_and_dirs = set()
+        places_and_dirs.add( (self._location, self._direction) )
         while self.move() is not None:
-            places.add(self.location)
-        return places
+            places_and_dirs.add( (self._location, self._direction) )
+        return places_and_dirs
+
+    def find_path_until_leave(self):
+        return set( x for x,_ in self.find_path_and_dirs_until_leave() )
 
     def distinct_visits_until_leave(self):
         return len(self.find_path_until_leave())
@@ -84,14 +87,14 @@ class Parse:
     def does_repeat(self, block):
         self.reset()
         r, c = block
-        if block == self.location or self._grid[r][c] == False:
+        if block == self._location or self._grid[r][c] == False:
             raise ValueError()
         self._grid[r][c] = False
         try:
             places = set()
-            places.add((self.location, self.direction))
+            places.add((self._location, self._direction))
             while self.move() is not None:
-                pair = (self.location, self.direction)
+                pair = (self._location, self._direction)
                 if pair in places:
                     return True
                 places.add(pair)
@@ -99,7 +102,7 @@ class Parse:
         finally:
             self._grid[r][c] = True
 
-    def count_blocking_points(self):
+    def count_blocking_points_very_slow(self):
         count = 0
         for r in range(self.rows):
             for c in range(self.columns):
@@ -109,7 +112,7 @@ class Parse:
                     count += 1
         return count
 
-    def count_blocking_points(self):
+    def count_blocking_points_slow(self):
         self.reset()
         places = self.find_path_until_leave()
         choices = []
@@ -131,6 +134,20 @@ class Parse:
             if self.does_repeat((r,c)):
                 count += 1
         return count
+
+    def count_blocking_points(self):
+        self.reset()
+        places = set()
+        while self.move() is not None:
+            places.add( self._location )
+    
+        blocks = set()
+        for block in places:
+            if block == self._init or not self.grid[block[0]][block[1]] or block in blocks:
+                continue
+            if self.does_repeat(block):
+                blocks.add(block)
+        return len(blocks)
 
 
 def main(second_flag):
