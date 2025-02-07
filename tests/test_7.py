@@ -35,3 +35,37 @@ def test_solution_with_concat(in1):
 
 def test_sum_can_solve_with_concat(in1):
     assert in1.sum_can_solve(True) == 11387
+
+def test_concat(in1):
+    assert in1.concat(5, 6) == 56
+    assert in1.concat(3, 45) == 345
+    assert in1.concat(123, 4567) == 1234567
+
+def test_solution_with_concat_fast(in1):
+    assert in1.solution_concat_fast(in1.data[0]) == "*"
+    assert in1.solution_concat_fast(in1.data[2]) is None
+    assert in1.solution_concat_fast(in1.data[8]) == "+*+"
+    assert in1.solution_concat_fast(in1.data[3]) == "|"
+
+def test_sum_can_solve_with_concat_fast(in1):
+    assert in1.sum_can_solve_fast() == 11387
+
+
+
+def atest():
+    import random, time
+    values = []
+    for _ in range(2):
+        values.append( [random.randint(1,1000000) for _ in range(1000000)] )
+    for _ in range(5):
+        st = time.monotonic()
+        out = [int(str(i)+str(j))  for i,j in zip(values[0], values[1])]
+        en = time.monotonic()
+        print(en-st)
+    for _ in range(5):
+        st = time.monotonic()
+        out1 = [concat(i,j) for i,j in zip(values[0], values[1])]
+        en = time.monotonic()
+        print(en-st)
+    assert out == out1
+    assert False
