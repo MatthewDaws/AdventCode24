@@ -71,3 +71,40 @@ def test_BronKerbosch():
     assert [x for x in cliques if len(x) == 3] == [{1,2,5}]
     assert len([x for x in cliques if len(x)==2]) == 4
     assert [x for x in cliques if len(x) > 3 or len(x) < 2] == []
+
+def test_Integer_Priority_Queue():
+    q = util.Integer_Priority_Queue()
+    assert q.is_empty
+    q.add("a", 5)
+    assert q.pop() == ("a", 5)
+    assert q.is_empty
+    q.add("a", 5)
+    q.add("b", 10)
+    q.add("c", 5)
+    e,w = q.pop()
+    assert e in "ac"
+    assert w == 5
+    e,w = q.pop()
+    assert e in "ac"
+    assert w == 5
+    e,w = q.pop()
+    assert e == "b"
+    assert w == 10
+    assert q.is_empty
+    q.add("a", 5)
+    q.add("b", 10)
+    q.add("c", 7)
+    q.add("b", 3)
+    q.add("c", 4)
+    assert q.pop() == ("b",3)
+    assert q.pop() == ("c", 4)
+    assert q.pop() == ("a", 5)
+    assert q.is_empty
+
+def test_shortest_path_unweighted_graph(graph1):
+    # 0-1, 0-2, 1-3, 2-3
+    dists, prev = util.shortest_path_unweighted(graph1, 0)
+    assert dists == {0:0, 1:1, 2:1, 3:2}
+    assert prev[1] == 0
+    assert prev[2] == 0
+    assert prev[3] in {1,2}

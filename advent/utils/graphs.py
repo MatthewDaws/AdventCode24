@@ -132,3 +132,76 @@ def BronKerbosch(graph):
             ns = set(graph.neighbours_of(v))
             tasks.append((clique | {v}, options & ns, ignore & ns))
             ignore.add(v)
+
+
+class Integer_Priority_Queue:
+    """Simple priority queue.  The weights are integers, and assumed to be close together.  `infinity` is the maximum weight."""
+    def __init__(self, infinity = 10000000):
+        self.entries_to_weight = dict()
+        self.weight_to_entry = dict()
+        self.infinity = infinity
+        self.current_min_weight = self.infinity
+
+    @property
+    def is_empty(self):
+        return len(self.entries_to_weight) == 0
+
+    def weight_is_infinity(self, weight):
+        return weight == self.infinity
+
+    def pop(self):
+        """Remove lowest weight object"""
+        key = self.weight_to_entry[self.current_min_weight].pop()
+        weight = self.current_min_weight
+        del self.entries_to_weight[key]
+        if len(self.weight_to_entry[self.current_min_weight]) == 0:
+            del self.weight_to_entry[self.current_min_weight]
+            if self.is_empty:
+                self.current_min_weight = self.infinity
+            else:
+                self.current_min_weight += 1
+                while self.current_min_weight not in self.weight_to_entry:
+                    self.current_min_weight += 1
+        return key, weight
+
+    def add(self, key, weight):
+        """Add a new weight or change the weight of an existing key."""
+        if weight is None:
+            weight = self.infinity
+        if key in self.entries_to_weight:
+            old_weight = self.entries_to_weight[key]
+            self.weight_to_entry[old_weight].remove(key)
+        self.entries_to_weight[key] = weight
+        if weight not in self.weight_to_entry:
+            self.weight_to_entry[weight] = set()
+            if weight < self.current_min_weight:
+                self.current_min_weight = weight
+        self.weight_to_entry[weight].add(key)
+
+
+def shortest_path_unweighted(graph, source):
+    """Uses Dijkstra's algorithm to find all the shortest paths from `source`, in an unweighted
+     graph `graph`.  Uses a priority queue, so faster for large graphs.
+     
+    Returns: `distances, previous` both dictionaries from vertices to distances, respectively,
+       previous vertex in shortest path to `source`.
+    """
+    distances = {v:None for v in graph.vertices}
+    previous = {v:None for v in graph.vertices}
+    queue = Integer_Priority_Queue()
+    distances[source] = 0
+    queue.add(source, 0)
+    visited = {source}
+    while not queue.is_empty:
+        vertex, mindist = queue.pop()
+        if queue.weight_is_infinity(mindist):
+            break
+        visited.add(vertex)
+        newdist = distances[vertex] + 1
+        for v in graph.neighbours_of(vertex):
+            if distances[v] is None or newdist < distances[v]:
+                distances[v] = newdist
+                previous[v] = vertex
+                if v not in visited:
+                    queue.add(v, newdist)
+    return distances, previous
